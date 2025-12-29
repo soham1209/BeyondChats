@@ -6,7 +6,11 @@ const ArticleSchema = new mongoose.Schema(
     original: {
       title: String,
       content: String,
-      url: String,
+      url: {
+        type: String,
+        unique: true, 
+        required: true
+      },
       publishedAt: Date,
       source: { type: String, default: "beyondchats" }
     },

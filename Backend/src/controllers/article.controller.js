@@ -2,8 +2,18 @@
 import Article from "../models/Article.js";
 
 export const createArticle = async (req, res) => {
-  const article = await Article.create(req.body);
-  res.status(201).json(article);
+  try {
+    const article = await Article.create(req.body);
+    res.status(201).json(article);
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({
+        message: "Article already exists"
+      });
+    }
+
+    res.status(500).json({ message: error.message });
+  }
 };
 
 export const getArticles = async (req, res) => {
