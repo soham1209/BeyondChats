@@ -1,3 +1,4 @@
+// Backend/src/services/readability.service.js
 import axios from "axios";
 import { JSDOM } from "jsdom";
 import { Readability } from "@mozilla/readability";
