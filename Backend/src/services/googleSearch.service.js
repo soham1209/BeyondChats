@@ -1,4 +1,3 @@
-// Backend/src/services/googleSearch.service.js
 import { getJson } from "serpapi";
 import dotenv from "dotenv";
 
@@ -6,12 +5,44 @@ dotenv.config();
 
 const SERPAPI_KEY = process.env.SERPAPI_KEY;
 
+const BLOCKED_DOMAINS = [
+  "amazon.",
+  "flipkart.",
+  "myntra.",
+  "meesho.",
+  "ebay.",
+  "pinterest.",
+  "facebook.",
+  "instagram.",
+  "twitter.",
+  "medium.",
+  "x.com",
+  "linkedin.",
+  "reddit.",
+  "quora.",
+  "youtube.",
+  "tiktok."
+];
+
+const isBlockedDomain = (url) =>
+  BLOCKED_DOMAINS.some((domain) => url.includes(domain));
+
+const looksLikeArticle = (url) => {
+  return (
+    url.includes("/blog") ||
+    url.includes("/article") ||
+    url.includes("/post") ||
+    url.includes("/insights") ||
+    url.split("/").length > 4 // deep URL = likely article
+  );
+};
+
 export const searchTopArticles = async (query) => {
   return new Promise((resolve, reject) => {
     getJson(
       {
         engine: "google",
-        q: query,
+        q: `${query} blog OR article -site:pinterest.com -site:amazon.com`,
         google_domain: "google.com",
         gl: "us",
         hl: "en",
@@ -26,11 +57,16 @@ export const searchTopArticles = async (query) => {
             .filter((r) => {
               if (!r.link) return false;
 
-              // exclude BeyondChats
-              if (r.link.includes("beyondchats.com")) return false;
+              const url = r.link.toLowerCase();
 
-              // basic article URL heuristic
-              return r.link.includes("/") && r.link.length > 30;
+              // Exclude your own site
+              if (url.includes("beyondchats.com")) return false;
+
+              // Exclude ecommerce / social / aggregators
+              if (isBlockedDomain(url)) return false;
+
+              // Include only article-like URLs
+              return looksLikeArticle(url);
             })
             .slice(0, 2)
             .map((r) => ({
@@ -39,8 +75,8 @@ export const searchTopArticles = async (query) => {
             }));
 
           resolve(filtered);
-        } catch (err) {
-          reject(err);
+        } catch (error) {
+          reject(error);
         }
       }
     );

@@ -1,7 +1,7 @@
 // Backend/src/services/readability.service.js
 import axios from "axios";
-import { JSDOM } from "jsdom";
 import { Readability } from "@mozilla/readability";
+import { JSDOM, VirtualConsole } from "jsdom";
 
 export const extractMainContent = async (url) => {
   try {
@@ -13,12 +13,18 @@ export const extractMainContent = async (url) => {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
           "(KHTML, like Gecko) Chrome/120.0 Safari/537.36",
-        Accept: "text/html"
-      }
+        Accept: "text/html",
+      },
     });
 
-    // 2. Create virtual DOM
-    const dom = new JSDOM(html, { url });
+    // 2. Create virtual DOM and suppress console warnings
+    const virtualConsole = new VirtualConsole();
+    virtualConsole.on("error", () => {}); // suppress CSS parse warnings
+
+    const dom = new JSDOM(html, {
+      url,
+      virtualConsole,
+    });
 
     // 3. Run Readability algorithm
     const reader = new Readability(dom.window.document);
@@ -29,9 +35,7 @@ export const extractMainContent = async (url) => {
     }
 
     // 4. Clean text
-    const cleanText = article.textContent
-      .replace(/\s+/g, " ")
-      .trim();
+    const cleanText = article.textContent.replace(/\s+/g, " ").trim();
 
     // 5. Basic validation
     if (cleanText.length < 500) {
@@ -42,7 +46,7 @@ export const extractMainContent = async (url) => {
       title: article.title,
       content: cleanText,
       siteName: article.siteName || new URL(url).hostname,
-      url
+      url,
     };
   } catch (error) {
     console.error(`Readability failed for ${url}:`, error.message);

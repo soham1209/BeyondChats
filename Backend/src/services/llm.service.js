@@ -4,15 +4,8 @@ import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 dotenv.config();
 
-/**
- * Initialize Gemini client
- * API key is automatically read from GEMINI_API_KEY env variable
- */
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-/**
- * Rewrite article using Gemini (Phase 2)
- */
 export const rewriteArticleWithGemini = async ({
   originalTitle,
   originalContent,
