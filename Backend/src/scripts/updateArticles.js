@@ -13,13 +13,29 @@
 
 // run();
 
-import { searchTopArticles } from "../services/googleSearch.service.js";
+// import { searchTopArticles } from "../services/googleSearch.service.js";
+
+// const test = async () => {
+//   const results = await searchTopArticles(
+//     "Future of Node.js in 2025"
+//   );
+//   console.log(results);
+// };
+
+// test();
+
+import { extractMainContent } from "../services/readability.service.js";
 
 const test = async () => {
-  const results = await searchTopArticles(
-    "Future of Node.js in 2025"
+  const result = await extractMainContent(
+    "https://beyondchats.com/blogs/introduction-to-chatbots/"
   );
-  console.log(results);
+
+  console.log({
+    title: result?.title,
+    site: result?.siteName,
+    length: result?.content.length,
+  });
 };
 
 test();
