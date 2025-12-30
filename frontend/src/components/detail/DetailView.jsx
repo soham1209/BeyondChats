@@ -1,4 +1,3 @@
-// frontend/src/components/detail/DetailView.jsx
 import { useState } from "react";
 import {
   ChevronLeft,
@@ -6,7 +5,7 @@ import {
   Zap,
   FileText,
   Sparkles,
-  Loader2
+  Loader2,
 } from "lucide-react";
 
 import Badge from "../common/Badge";
@@ -14,15 +13,18 @@ import MarkdownRenderer from "../common/MarkdownRenderer";
 
 const DetailView = ({ article, onBack }) => {
   const [isGenerating, setIsGenerating] = useState(false);
-  const isOriginal = article.status === "original";
+
+  // IMPORTANT: UI logic is based on DATA, not status
+  const hasUpdated = !!article.updated_article;
 
   const handleUpdateClick = () => {
     setIsGenerating(true);
-    // UI-only demo state
+    // later this will call backend update API
   };
 
   return (
     <div className="transition-all duration-300 ease-out">
+      {/* ================= Header ================= */}
       <div className="mb-6 flex items-center justify-between">
         <button
           onClick={onBack}
@@ -35,13 +37,12 @@ const DetailView = ({ article, onBack }) => {
         </button>
 
         <div className="flex items-center gap-3">
-          <span className="text-sm text-slate-400 font-medium">
-            Article ID: {article.id}
-          </span>
           <Badge type={article.status} />
         </div>
       </div>
-      {isOriginal && !isGenerating ? (
+
+      {/* ================= ORIGINAL ONLY (NOT UPDATED YET) ================= */}
+      {!hasUpdated && !isGenerating ? (
         <div className="max-w-3xl mx-auto">
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <div className="p-8 border-b border-slate-100">
@@ -49,6 +50,7 @@ const DetailView = ({ article, onBack }) => {
                 {article.title}
               </h1>
 
+              {/* Action Area */}
               <div className="bg-slate-50 rounded-lg p-6 border border-slate-200 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-3 text-slate-600">
                   <div className="bg-orange-100 p-2 rounded-full text-orange-600">
@@ -76,6 +78,7 @@ const DetailView = ({ article, onBack }) => {
                 </button>
               </div>
 
+              {/* Original Content */}
               <div>
                 <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">
                   Original Content
@@ -89,13 +92,14 @@ const DetailView = ({ article, onBack }) => {
           </div>
         </div>
       ) : (
-
+        /* ================= SPLIT VIEW (ORIGINAL + UPDATED) ================= */
         <div className="flex flex-col gap-6">
           <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900">
             {article.title}
           </h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* -------- LEFT: ORIGINAL -------- */}
             <div className="flex flex-col">
               <div className="bg-slate-100 border border-slate-200 rounded-t-xl p-3 flex items-center gap-2">
                 <FileText className="text-slate-500 w-4 h-4" />
@@ -104,12 +108,14 @@ const DetailView = ({ article, onBack }) => {
                 </span>
               </div>
 
-              <div className="bg-slate-50 border border-t-0 border-slate-200 rounded-b-xl p-6 grow">
+              <div className="bg-slate-50 border border-t-0 border-slate-200 rounded-b-xl p-6 flex-grow">
                 <p className="text-slate-600 font-serif leading-relaxed whitespace-pre-wrap">
                   {article.original_article}
                 </p>
               </div>
             </div>
+
+            {/* -------- RIGHT: UPDATED OR LOADING -------- */}
             <div className="flex flex-col relative h-full">
               {isGenerating ? (
                 <div className="flex flex-col h-full bg-white rounded-xl border border-indigo-100 shadow-sm relative">
@@ -126,6 +132,7 @@ const DetailView = ({ article, onBack }) => {
                     </p>
                   </div>
 
+                  {/* Skeleton */}
                   <div className="p-8 space-y-6 opacity-20">
                     <div className="h-8 bg-slate-300 rounded w-3/4" />
                     <div className="space-y-2">
@@ -144,7 +151,7 @@ const DetailView = ({ article, onBack }) => {
                     </span>
                   </div>
 
-                  <div className="p-6 lg:p-8 grow">
+                  <div className="p-6 lg:p-8 flex-grow">
                     <MarkdownRenderer content={article.updated_article} />
                   </div>
                 </div>

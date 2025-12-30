@@ -5,6 +5,7 @@ import Dashboard from "../components/dashboard/Dashboard";
 import DetailView from "../components/detail/DetailView";
 import NavBar from "../components/layout/NavBar";
 import { getArticles } from "../services/api";
+import { fetchArticlesFromBackend, triggerArticleFetch } from "../services/api";
 
 const Home = () => {
   const [view, setView] = useState("start"); // start | dashboard | detail
@@ -15,12 +16,43 @@ const Home = () => {
   const handleStartFetching = async () => {
     setLoading(true);
     try {
-      const response = await getArticles();
-      setArticles(response.data);
+      // 1. Trigger backend scraping
+      await triggerArticleFetch();
+
+      // 2. Normalize articles
+      const normalizeArticles = (data) => {
+        return data.map((a) => ({
+          id: a._id,
+          status: a.status,
+
+          // Card data
+          title: a.original?.title || "Untitled Article",
+          preview: a.original?.content
+            ? a.original.content.slice(0, 120) + "..."
+            : "No preview available",
+
+          // Detail view data
+          original_article: a.original?.content || "",
+          updated_article: a.updated?.content || null,
+
+          // keep full refs if needed later
+          _raw: a,
+        }));
+      };
+
+      // 3. Fetch articles from DB
+      const response = await fetchArticlesFromBackend();
+      setArticles(normalizeArticles(response.data));
+
+
+      console.log(normalizeArticles(response.data));
+
+
+      // 4. Move to dashboard
       setView("dashboard");
     } catch (error) {
-      console.error("Failed to fetch", error);
-      alert("Error fetching articles");
+      console.error("Fetch failed:", error);
+      alert("Failed to fetch articles");
     } finally {
       setLoading(false);
     }

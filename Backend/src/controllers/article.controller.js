@@ -1,5 +1,7 @@
 //Backend/src/controllers/article.controller.js
 import Article from "../models/Article.js";
+import { fetchAndStoreArticles } from "../services/articleFetch.service.js";
+
 
 export const createArticle = async (req, res) => {
   try {
@@ -39,3 +41,22 @@ export const deleteArticle = async (req, res) => {
   await Article.findByIdAndDelete(req.params.id);
   res.json({ message: "Article deleted" });
 };
+
+
+export const fetchArticlesController = async (req, res) => {
+  try {
+    const result = await fetchAndStoreArticles();
+    res.status(200).json({
+      success: true,
+      message: "Articles fetched successfully",
+      result,
+    });
+  } catch (error) {
+    console.error("Fetch controller error:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch articles",
+    });
+  }
+};
+

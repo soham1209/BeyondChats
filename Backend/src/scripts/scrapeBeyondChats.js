@@ -77,14 +77,36 @@ const getOldestFiveArticles = async () => {
   return oldestFive.reverse();
 };
 
-// 4. Scrape full article content
+// 4. Scrape full article content (UPDATED for Elementor)
 const scrapeArticleContent = async (article) => {
   try {
     const { data } = await axios.get(article.url);
     const $ = cheerio.load(data);
 
-    let content = $(".entry-content").text().trim();
-    if (!content) content = $(".ct-entry-content").text().trim();
+    let content = "";
+
+    // Target the specific Elementor container from your HTML
+    const elementorContainer = $(".elementor-widget-theme-post-content");
+
+    if (elementorContainer.length > 0) {
+      // Loop through paragraphs, headers, and list items to preserve structure
+      elementorContainer.find("p, h2, h3, h4, li").each((_, el) => {
+        const text = $(el).text().trim();
+        if (text) {
+          content += text + "\n\n";
+        }
+      });
+    }
+
+    // Fallback 1: Try broader ID if Elementor class fails
+    if (!content) {
+      content = $("#content").text().trim();
+    }
+
+    // Fallback 2: Original classes
+    if (!content) {
+      content = $(".entry-content").text().trim() || $(".ct-entry-content").text().trim();
+    }
 
     return {
       original: {
