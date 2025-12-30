@@ -315,8 +315,13 @@ Frontend runs on:
 *   Gemini output is markdown-rendered properly
     
 *   Repo contains frequent commits for progress tracking
-    
 
+### CORS & API Communication
+
+- Backend uses controlled CORS with environment-based origin
+- Frontend (Vite) uses proxy configuration to forward `/api` calls
+- This avoids CORS issues during development and keeps production secure
+    
 👤 Author
 ---------
 
