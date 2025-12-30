@@ -259,9 +259,9 @@ Frontend runs on:
 🌍 Live Demo
 ------------
 
-🔗 **Frontend Live Link:**👉 https://beyondchats-frontend-v6bw.onrender.com
+🔗 **Frontend Live Link:**👉 [https://beyondchats-frontend-v6bw.onrender.com](https://beyondchats-frontend-5zwi.onrender.com/)
 
-🔗 **Backend API (optional):**👉 https://beyondchats-backend-fxkm.onrender.com
+🔗 **Backend API (optional):**👉 [https://beyondchats-backend-fxkm.onrender.com](https://beyondchats-backend-fxkm.onrender.com)
 
 📸 Screenshots (Optional but Recommended)
 -----------------------------------------
