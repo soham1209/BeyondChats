@@ -13,7 +13,7 @@ const StartScreen = ({ onStart, loading }) => {
       </h1>
 
       <p className="text-xl text-slate-500 mb-10 max-w-2xl">
-        Fetch articles from the repository and analyze the differences between
+        Scrape articles from the BeyondChats and analyze the differences between
         original drafts and AI-enhanced versions.
       </p>
 
@@ -33,11 +33,11 @@ const StartScreen = ({ onStart, loading }) => {
         {loading ? (
           <>
             <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            Fetching Repository...
+            Scrapeing Website...
           </>
         ) : (
           <>
-            Start Fetching Articles
+            Start Scraping Articles
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </>
         )}
