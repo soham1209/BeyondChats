@@ -259,9 +259,9 @@ Frontend runs on:
 🌍 Live Demo
 ------------
 
-🔗 **Frontend Live Link:**👉 _Add your deployed frontend URL here (Vercel / Netlify)_
+🔗 **Frontend Live Link:**👉 https://beyondchats-frontend-v6bw.onrender.com
 
-🔗 **Backend API (optional):**👉 _Add backend deployment URL if hosted_
+🔗 **Backend API (optional):**👉 https://beyondchats-backend-fxkm.onrender.com
 
 📸 Screenshots (Optional but Recommended)
 -----------------------------------------

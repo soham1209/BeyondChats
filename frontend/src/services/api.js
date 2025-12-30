@@ -1,6 +1,14 @@
 // frontend/src/services/api.js
 import axios from "axios";
 
+const API_BASE_URL = import.meta.env.PROD
+  ? "https://beyondchats-backend-fxkm.onrender.com"
+  : "http://localhost:5000"; 
+
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+});
+
 export const fetchArticlesFromBackend = () =>
   axios.get("/api/articles");
 
