@@ -1,16 +1,12 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// frontend/src/App.jsx
+import Home from "./pages/Home";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-      <p className='p-5 text-xl text-bold'>hellow there</p>
-    </>
-  )
-}
+    <div className="min-h-screen bg-slate-50 text-slate-900">
+      <Home />
+    </div>
+  );
+};
 
-export default App
+export default App;
