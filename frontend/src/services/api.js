@@ -77,3 +77,7 @@ export const fetchArticlesFromBackend = async () => {
 export const triggerArticleFetch = async () => {
   return axios.post(`${API_BASE}/articles/fetch`);
 };
+
+export const enhanceArticle = (id) => {
+  return axios.post(`${API_BASE}/articles/${id}/enhance`);
+};

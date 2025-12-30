@@ -6,7 +6,8 @@ import {
   getArticleById,
   updateArticle,
   deleteArticle,
-  fetchArticlesController
+  fetchArticlesController,
+enhanceArticleController 
 } from "../controllers/article.controller.js";
 
 
@@ -19,5 +20,6 @@ router.put("/:id", updateArticle);
 router.delete("/:id", deleteArticle);
 
 router.post("/fetch", fetchArticlesController);
+router.post("/:id/enhance", enhanceArticleController);
 
 export default router;

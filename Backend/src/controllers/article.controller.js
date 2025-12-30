@@ -1,7 +1,7 @@
 //Backend/src/controllers/article.controller.js
 import Article from "../models/Article.js";
 import { fetchAndStoreArticles } from "../services/articleFetch.service.js";
-
+import { enhanceSingleArticle } from "../services/articleEnhance.service.js";
 
 export const createArticle = async (req, res) => {
   try {
@@ -59,4 +59,25 @@ export const fetchArticlesController = async (req, res) => {
     });
   }
 };
+
+
+export const enhanceArticleController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updatedArticle = await enhanceSingleArticle(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Article enhanced successfully",
+      article: updatedArticle
+    });
+  } catch (error) {
+  res.status(400).json({
+    success: false,
+    code: error.message,
+  });
+}
+};
+
 
