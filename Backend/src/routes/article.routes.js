@@ -7,9 +7,8 @@ import {
   updateArticle,
   deleteArticle,
   fetchArticlesController,
-enhanceArticleController 
+  enhanceArticleController,
 } from "../controllers/article.controller.js";
-
 
 const router = express.Router();
 

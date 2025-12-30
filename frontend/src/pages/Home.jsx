@@ -4,8 +4,7 @@ import StartScreen from "../components/start/StartScreen";
 import Dashboard from "../components/dashboard/Dashboard";
 import DetailView from "../components/detail/DetailView";
 import NavBar from "../components/layout/NavBar";
-import { getArticles } from "../services/api";
-import { fetchArticlesFromBackend, triggerArticleFetch } from "../services/api";
+import { fetchArticlesFromBackend, triggerArticleFetch,deleteArticle } from "../services/api";
 
 const Home = () => {
   const [view, setView] = useState("start"); // start | dashboard | detail
@@ -69,6 +68,18 @@ const Home = () => {
     setView("dashboard");
   };
 
+  const handleDeleteArticle = async (id) => {
+  const confirm = window.confirm("Are you sure you want to delete this article?");
+  if (!confirm) return;
+
+  try {
+    await deleteArticle(id);
+    setArticles(prev => prev.filter(a => a.id !== id));
+  } catch (err) {
+    alert("Failed to delete article");
+  }
+};
+
   return (
     <div className="min-h-screen bg-slate-50/50 text-slate-900">
       <NavBar
@@ -85,7 +96,7 @@ const Home = () => {
         )}
 
         {view === "dashboard" && (
-          <Dashboard articles={articles} onSelect={handleSelectArticle} />
+          <Dashboard articles={articles} onSelect={handleSelectArticle} onDelete={handleDeleteArticle} />
         )}
 
         {view === "detail" && selectedArticle && (

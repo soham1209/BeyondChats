@@ -1,8 +1,5 @@
 // Backend/src/services/articleUpdate.service.js
 import axios from "axios";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const API_URL =
   process.env.BACKEND_API_URL || "http://localhost:5000/api/articles";

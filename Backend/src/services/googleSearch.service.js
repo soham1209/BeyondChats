@@ -1,7 +1,4 @@
 import { getJson } from "serpapi";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const SERPAPI_KEY = process.env.SERPAPI_KEY;
 
@@ -21,7 +18,7 @@ const BLOCKED_DOMAINS = [
   "reddit.",
   "quora.",
   "youtube.",
-  "tiktok."
+  "tiktok.",
 ];
 
 const isBlockedDomain = (url) =>
@@ -47,7 +44,7 @@ export const searchTopArticles = async (query) => {
         gl: "us",
         hl: "en",
         num: 10,
-        api_key: SERPAPI_KEY
+        api_key: SERPAPI_KEY,
       },
       (json) => {
         try {
@@ -71,7 +68,7 @@ export const searchTopArticles = async (query) => {
             .slice(0, 2)
             .map((r) => ({
               title: r.title,
-              url: r.link
+              url: r.link,
             }));
 
           resolve(filtered);
@@ -82,8 +79,6 @@ export const searchTopArticles = async (query) => {
     );
   });
 };
-
-
 
 // import { getJson } from "serpapi";
 // import dotenv from "dotenv";

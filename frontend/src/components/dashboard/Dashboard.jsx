@@ -1,7 +1,7 @@
 // frontend/src/components/dashboard/Dashboard.jsx
 import ArticleList from "./ArticleList";
 
-const Dashboard = ({ articles, onSelect }) => {
+const Dashboard = ({ articles, onSelect,onDelete }) => {
   const updatedArticles = articles.filter(
     (a) => a.status === "updated"
   );
@@ -20,6 +20,7 @@ const Dashboard = ({ articles, onSelect }) => {
         items={originalArticles}
         type="original"
         onSelect={onSelect}
+        onDelete={onDelete}
       />
 
       {/* Right: Updated Articles */}
@@ -28,6 +29,7 @@ const Dashboard = ({ articles, onSelect }) => {
         items={updatedArticles}
         type="updated"
         onSelect={onSelect}
+        onDelete={onDelete}
       />
     </div>
   );

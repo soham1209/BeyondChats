@@ -2,7 +2,7 @@
 import { Sparkles, FileText } from "lucide-react";
 import ArticleCard from "./ArticleCard";
 
-const ArticleList = ({ title, items, type, onSelect }) => {
+const ArticleList = ({ title, items, type, onSelect,onDelete  }) => {
   const isUpdated = type === "updated";
 
   return (
@@ -57,6 +57,7 @@ const ArticleList = ({ title, items, type, onSelect }) => {
                 article={article}
                 type={type}
                 onSelect={onSelect}
+                onDelete={onDelete}
               />
             ))}
           </div>

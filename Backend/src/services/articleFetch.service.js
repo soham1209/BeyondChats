@@ -1,12 +1,13 @@
+// Backend/src/services/articleFetch.service.js
 import axios from "axios";
 import * as cheerio from "cheerio";
 import dotenv from "dotenv";
-
 dotenv.config();
 
 const BASE_URL = process.env.BEYONDCHATS_BASE_URL || "https://beyondchats.com";
 const BLOG_URL = `${BASE_URL}/blogs/`;
-const SAVE_API_URL = process.env.BACKEND_API_URL || "http://localhost:5000/api/articles";
+const SAVE_API_URL =
+  process.env.BACKEND_API_URL || "http://localhost:5000/api/articles";
 
 // Helper: Extract article summaries from a list page
 const extractArticlesFromHtml = ($) => {
@@ -67,7 +68,7 @@ const getOldestFiveArticles = async () => {
 
   while (collected.length < 5 && page >= 1) {
     const articles = await fetchPageArticles(page);
-    collected = [...articles, ...collected]; 
+    collected = [...articles, ...collected];
     page--;
   }
   return collected.slice(-5).reverse();
@@ -80,7 +81,7 @@ const scrapeArticleContent = async (article) => {
     const $ = cheerio.load(data);
 
     const selectors = [
-      ".elementor-widget-theme-post-content", 
+      ".elementor-widget-theme-post-content",
       ".entry-content",
       ".ct-entry-content",
       "article",
@@ -92,28 +93,28 @@ const scrapeArticleContent = async (article) => {
     for (const sel of selectors) {
       const element = $(sel);
       if (element.length > 0) {
-
-        content = element.find('p, h2, h3, h4, li')
+        content = element
+          .find("p, h2, h3, h4, li")
           .map((_, el) => $(el).text().trim())
           .get()
-          .join('\n\n');
+          .join("\n\n");
 
-        if (content.length > 500) break; 
+        if (content.length > 500) break;
       }
     }
 
     if (!content) {
-         for (const sel of selectors) {
-             const rawText = $(sel).text().trim();
-             if (rawText.length > 500) {
-                 content = rawText;
-                 break;
-             }
-         }
+      for (const sel of selectors) {
+        const rawText = $(sel).text().trim();
+        if (rawText.length > 500) {
+          content = rawText;
+          break;
+        }
+      }
     }
 
     if (!content || content.length < 200) {
-      console.log(`❌ Skipped (content too short/empty): ${article.title}`);
+      // console.log(`Skipped (content too short/empty): ${article.title}`);
       return null;
     }
 
@@ -128,7 +129,7 @@ const scrapeArticleContent = async (article) => {
       status: "original",
     };
   } catch (err) {
-    console.error(`❌ Failed scrape for ${article.title}: ${err.message}`);
+    // console.error(`Failed scrape for ${article.title}: ${err.message}`);
     return null;
   }
 };
@@ -139,23 +140,25 @@ const saveArticle = async (article) => {
 
   try {
     await axios.post(SAVE_API_URL, article);
-    console.log(`✅ Saved: ${article.original.title}`);
+    // console.log(`Saved: ${article.original.title}`);
   } catch (err) {
-
     if (err.response?.status === 409) {
-        console.log(`⚠️ Article already exists: ${article.original.title}`);
+      // console.log(`Article already exists: ${article.original.title}`);
     } else {
-        console.error(`❌ Save error for ${article.original.title}:`, err.message);
+      console.error(
+        `❌ Save error for ${article.original.title}:`,
+        err.message
+      );
     }
   }
 };
 
 // MAIN EXPORTED FUNCTION
 export const fetchAndStoreArticles = async () => {
-  console.log("🚀 Phase 1: Article Scraper Started");
+  // console.log("Phase 1: Article Scraper Started");
 
   const articles = await getOldestFiveArticles();
-  console.log(`🔍 Found ${articles.length} articles to process.`);
+  // console.log(`Found ${articles.length} articles to process.`);
 
   for (const article of articles) {
     const fullArticleData = await scrapeArticleContent(article);
@@ -164,5 +167,5 @@ export const fetchAndStoreArticles = async () => {
     }
   }
 
-  console.log("🎉 Phase 1: Scraper Completed");
+  // console.log(" Phase 1: Scraper Completed");
 };
